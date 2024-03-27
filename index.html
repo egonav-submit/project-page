@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <style>
+    #results-carousel .item img {
+      /* Adjust the width and height as needed */
+      width: 100%; /* Responsive to container size */
+      height: auto; /* Maintain aspect ratio */
+      /* Scale up images */
+      transform: scale(1.0);
+      /* Center the image in case it overflows its container */
+      margin-left: 0%; /* Adjust this value as needed */
+      margin-top: 0%; /* Adjust this value as needed */
+    }
+  </style>
+ 
+
   <meta charset="utf-8">
   <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
   <!-- Replace the content tag with appropriate information -->
@@ -134,17 +148,26 @@
 </section>
 
 
+
+
+
+<!-- ===================================Contents=========================================== -->>
+
+
+
+
+
 <!-- Teaser video-->
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
       <video poster="" id="tree" autoplay controls muted loop height="100%">
         <!-- Your video here -->
-        <source src="static/videos/banner_video.mp4"
+        <source src="static/videos/teaser_vid.mp4"
         type="video/mp4">
       </video>
       <h2 class="subtitle has-text-centered">
-        Aliquam vitae elit ullamcorper tellus egestas pellentesque. Ut lacus tellus, maximus vel lectus at, placerat pretium mi. Maecenas dignissim tincidunt vestibulum. Sed consequat hendrerit nisl ut maximus. 
+        Given past trajectory and the current scene, our method predicts the discrete distribution of possible future trajectory of the user.
       </h2>
     </div>
   </div>
@@ -173,41 +196,137 @@
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-       <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel1.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          First image description.
-        </h2>
+      <h2 class="title is-3">Dataset</h2>
+      <div class="content has-text-justified">
+        <p>
+          Our Egocentric Navigation Dataset is collected around Stanford university campus and its vicinity. The dataset has 34 collections, each approximately 7 minutes spanning over 600 meters, designed to capture a wide range of interactions with the environment. The dataset encompasses various weather conditions (rain, sunny, overcast), surface textures (glass, solid, glossy, reflective, water), and environmental features (stairs, ramps, flat grounds, hills, off-road paths), alongside dynamic obstacles, including humans.
+        </p>
+        <p>
+          Recorded at a 20Hz sampling rate, the dataset includes comprehensive state and visual information to capture the nuances in human behavior: 
+          
+          States: 6 degrees of freedom (dof) torso pose in a global frame, leg joint angles (hips and knees of both legs), torso linear and angular velocity, and gait frequency. 
+          
+          Visual: aligned color and depth images, semantic segmentation masks, and visual memory frames generated. 
+          
+          Totaling 198 minutes of data (over 400GB), in practice, we find it is possible to train a very high-quality model even with a smaller dataset size. Therefore we curated a high-quality pilot dataset with roughly 15% of the full data. This allows us to quickly iterate with faster training and an acceptable amount of performance degradation. The performance has been qualitatively compared in the ablation.
+        </p>
+        <p>
+          We hope to addresses critical gaps by providing dense, high-frequency logs with rich visual and state information. And we are committed to open-sourcing our dataset following the de-identification of all faces within the data. We will also provide the software tools to collect and process the data, in case anyone wishes to extend the dataset or collect similar data in different environments.
+        </p>
       </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel2.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-          Second image description.
-        </h2>
-      </div>
-      <div class="item">
-        <!-- Your image here -->
-        <img src="static/images/carousel3.jpg" alt="MY ALT TEXT"/>
-        <h2 class="subtitle has-text-centered">
-         Third image description.
-       </h2>
-     </div>
-     <div class="item">
-      <!-- Your image here -->
-      <img src="static/images/carousel4.jpg" alt="MY ALT TEXT"/>
-      <h2 class="subtitle has-text-centered">
-        Fourth image description.
-      </h2>
-    </div>
+      <div id="results-carousel" class="carousel results-carousel" style="max-width: 848px; margin: auto;">
+
   </div>
 </div>
 </div>
 </section>
+<!-- End image carousel --> 
+ 
+ 
+
+
+<!-- Image carousel -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Method</h2>
+      <div class="content has-text-justified">
+        <div class="method-picture">
+          <img src="static/images/Method.png" alt="Method Picture"/>
+        </div>
+        <p>
+          The goal of this work is to predict the possible paths of a person in a cluttered environment. A trajectory is defined as a sequence of 6D poses (translation and orientation) of a person navigating in the 3D world. At each time step t, our model uses the past trajectory to predict likely future trajectories. In addition, the prediction must be conditioned on the observation of surroundings.  The visual observation S encodes the appearance, geometry, and semantics of the environment captured by wearable visual and depth sensors. 
+        </p>
+
+        <p>
+          Therefore, our method takes in the past trajectory of the person and a short history of RGBD images. The color images are semantically labeled by DINOv2 into 8 semantic channels, while the depth images go through a preprocessing pipeline that filters out erroneously filled edges. We transform the past trajectory from a global coordinate frame to an egocentric frame defined by the gravity vector as -Z and forward-facing direction as +X. The collected images are them project and globally aligned to create a single panorama in the egocentric coordinate frame, referred to as "visual memory". Conditioning on the visual memory and the past ego trajectory, a diffusion model is trained to predict the future trajectory, along with encoded visual observations as auxiliary outputs. Finally, we use the VAE decoder to recover the expected future panorama. Combining with the hybrid generation method illustrated in the later section, we aim to provide a fast and effective method in predicting the distribution of the future states conditioning on the observed environment.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
 <!-- End image carousel -->
 
+
+<!-- Image carousel -->
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Visual Memory</h2>
+      <div class="content has-text-justified">
+        <div class="method-picture">
+          <img src="static/images/Panorama.png" alt="Construction of Visual Panorama"/>
+        </div>
+
+        <p>
+          Visual memory is an ego-perspective, panoramic view representation of the surroundings. Given the camera's intrinsic and extrinsic parameters, images in different frames and channels can be projected to a single point cloud in the global frame. A distance-based filter is applied to remove points too far away from the current pose. The points are then projected back to the current ego frame to form a coherent representation of all the scene information gathered.
+
+          It is important to note that the visual memory representation holds a lot more relevant information than just a single image. As shown below, A single image from a stereo camera only has a narrow FOV pointing directly in front. It fails to capture the objects and paths in the scene that are highly relevant to the prediction, requiring many individual frames to be sent to the prediction module, relying on the model's capability to extract useful information. Meanwhile, the visual memory stitches the past frames together and integrates multi-modal inputs all into one single image, greatly improving the model and storage efficiency.
+        </p>
+
+        <div class="method-picture">
+          <img src="static/images/VisualMemory.png" alt="Visual Memory Picture"/>
+        </div>
+
+      </div>
+  </div>
+</div>
+</section>
+<!-- End image carousel -->
+
+
+<!-- Image carousel -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Prediction Model and Hybrid Generation</h2>
+      <div class="content has-text-justified">
+        <div class="method-picture">
+          <img src="static/images/Model.png" alt="Model Picture"/>
+        </div>
+        <p>
+          A conventional DDPM sampling method, while capable of producing high-quality predictions, operates at a pace that is impractical for applications requiring immediate responses, such as navigational aids or interactive systems. This limitation is further pronounced when attempting to generate a distribution of future trajectories, as multiple denoising sequences are necessary to produce a substantial number of samples, exacerbating the time constraints. Conversely, while DDIM offers a considerable acceleration in generating predictions, it does so at the expense of sample quality—a compromise that is untenable for applications where the fidelity of predicted trajectories directly impacts functionality and safety.
+        </p>
+        <p>
+          To address these challenges, we introduce a hybrid generation scheme that combines the strengths of both methods. Hybrid generation operates by initiating the generation process with a DDIM-like approach to quickly approximate the trajectory distribution, followed by a refinement phase using the DDPM. Essentially retaining the multimodal gradient landscape at the end of the diffusion process, ensuring that the final output maintains the intricate details and nuanced variations captured by a traditional DDPM without the accompanying latency. In practice, we were able to achieve 50x acceleration in generating samples with minimal performance drop.
+        </p>
+        <div class="publication-video">
+          <!-- Youtube embed code here -->
+          <iframe src="https://www.youtube.com/embed/X8ADKuLDMRo?vq=hd2160" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        
+      </div>
+  </div>
+</div>
+</section>
+<!-- End image carousel -->
+
+
+
+<section class="hero is-small">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Results and evaluation metrics</h2>
+      <div class="content has-text-justified">
+        <p>
+          A visual illustration of three metrics is shown below:
+        </p>
+
+        <div class="method-picture">
+          <img src="static/images/Metrics.png" alt="Metric Picture"/>
+        </div>
+
+        <!-- Embedding table.html into your main document -->
+        <iframe src="table_ablation.html" frameborder="0" width="100%" height="465px"></iframe> 
+
+        <iframe src="table_baseline.html" frameborder="0" width="100%" height="200px"></iframe> 
+        <p>
+          We found two previous papers that build to solve similar task as we do. The CXA transformer by Jianing et al. proposes a novel cascaded cross-attention transformer block to fuse in multimodal inputs. And then uses transformer decoder to generate the predicted trajectory autoregressively. The LSTM-VAE is another popular method commonly used in various trajectory prediction task. All three models are trained on the same dataset and evaluated by the same data and metrics.
+        </p>
+      </div>
+  </div>
+</div>
+</section>
 
 
 
@@ -232,57 +351,7 @@
 <!-- End youtube video -->
 
 
-<!-- Video carousel -->
-<section class="hero is-small">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title is-3">Another Carousel</h2>
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-video1">
-          <video poster="" id="video1" autoplay controls muted loop height="100%">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel1.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video2">
-          <video poster="" id="video2" autoplay controls muted loop height="100%">
-            <!-- Your video file here -->
-            <source src="static/videos/carousel2.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-video3">
-          <video poster="" id="video3" autoplay controls muted loop height="100%">\
-            <!-- Your video file here -->
-            <source src="static/videos/carousel3.mp4"
-            type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- End video carousel -->
 
-
-
-
-
-
-<!-- Paper poster -->
-<section class="hero is-small is-light">
-  <div class="hero-body">
-    <div class="container">
-      <h2 class="title">Poster</h2>
-
-      <iframe  src="static/pdfs/sample.pdf" width="100%" height="550">
-          </iframe>
-        
-      </div>
-    </div>
-  </section>
-<!--End paper poster -->
 
 
 <!--BibTex citation -->
@@ -302,9 +371,7 @@
         <div class="content">
 
           <p>
-            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
-            You are free to borrow the of this website, we just ask that you link back to this page in the footer. <br> This website is licensed under a <a rel="license"  href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">Creative
-            Commons Attribution-ShareAlike 4.0 International License</a>.
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a> which was adopted from the <a href="https://nerfies.github.io" target="_blank">Nerfies</a> project page.
           </p>
 
         </div>
@@ -335,6 +402,47 @@
 
 
     <!-- End of Statcounter Code -->
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // Generate the array of image filenames dynamically
+        const imageFilenames = [];
+        for (let i = 1; i <= 36; i++) {
+          imageFilenames.push(i + '.png');
+        }
+      
+        // The base path to the images
+        const basePath = '/static/images/dataset_pic/';
+      
+        // Get the carousel container
+        const carouselContainer = document.getElementById('results-carousel');
+      
+        // Iterate over the image filenames
+        imageFilenames.forEach((filename, index) => {
+          // Create the carousel item div
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'item';
+      
+          // Create the image tag
+          const img = document.createElement('img');
+          img.src = basePath + filename;
+          img.alt = `Dataset example ${index + 1}`;
+      
+          // Create the subtitle
+          const subtitle = document.createElement('h2');
+          subtitle.className = 'subtitle has-text-centered';
+          subtitle.textContent = `Dataset example ${index + 1}`;
+      
+          // Append the image and subtitle to the item div
+          itemDiv.appendChild(img);
+          itemDiv.appendChild(subtitle);
+      
+          // Append the item div to the carousel container
+          carouselContainer.appendChild(itemDiv);
+        });
+      });
+      </script>
+      
 
   </body>
   </html>
