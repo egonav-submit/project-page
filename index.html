@@ -87,7 +87,7 @@
                     <div class="publication-links">
                          <!-- Arxiv PDF link -->
                       <span class="link-block">
-                        <a href="https://arxiv.org/pdf/<ARXIV PAPER ID>.pdf" target="_blank"
+                        <a href="https://arxiv.org/pdf/2403.19026.pdf" target="_blank"
                         class="external-link button is-normal is-rounded is-dark">
                         <span class="icon">
                           <i class="fas fa-file-pdf"></i>
@@ -98,7 +98,7 @@
 
                     <!-- Supplementary PDF link -->
                     <span class="link-block">
-                      <a href="static/pdfs/supplementary_material.pdf" target="_blank"
+                      <a href="static/pdfs/2024MMEgoSupple.pdf" target="_blank"
                       class="external-link button is-normal is-rounded is-dark">
                       <span class="icon">
                         <i class="fas fa-file-pdf"></i>
@@ -131,7 +131,7 @@
 
                 <!-- ArXiv abstract Link -->
                 <span class="link-block">
-                  <a href="https://arxiv.org/abs/<ARXIV PAPER ID>" target="_blank"
+                  <a href="https://arxiv.org/abs/2403.19026" target="_blank"
                   class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                     <i class="ai ai-arxiv"></i>
@@ -358,7 +358,13 @@
   <section class="section" id="BibTeX">
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
-      <pre><code>BibTex Code Here</code></pre>
+      <pre><code>@article{wang2024egocentric,
+        title={Egocentric Scene-aware Human Trajectory Prediction}, 
+        author = {Wang, Weizhuo and Liu, C. Karen and Kennedy III, Monroe},
+        journal={arXiv preprint arXiv:2403.19026},
+        year={2024},
+}
+</code></pre>
     </div>
 </section>
 <!--End BibTex citation -->
@@ -380,11 +386,51 @@
   </div>
 </footer>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Generate the array of image filenames dynamically
+    const imageFilenames = [];
+    for (let i = 1; i <= 36; i++) {
+      imageFilenames.push(i + '.png');
+    }
+  
+    // The base path to the images
+    const basePath = '/static/images/dataset_pic/';
+  
+    // Get the carousel container
+    const carouselContainer = document.getElementById('results-carousel');
+  
+    // Iterate over the image filenames
+    imageFilenames.forEach((filename, index) => {
+      // Create the carousel item div
+      const itemDiv = document.createElement('div');
+      itemDiv.className = 'item';
+  
+      // Create the image tag
+      const img = document.createElement('img');
+      img.src = basePath + filename;
+      img.alt = `Dataset example ${index + 1}`;
+  
+      // Create the subtitle
+      const subtitle = document.createElement('h2');
+      subtitle.className = 'subtitle has-text-centered';
+      subtitle.textContent = `Dataset example ${index + 1}`;
+  
+      // Append the image and subtitle to the item div
+      itemDiv.appendChild(img);
+      itemDiv.appendChild(subtitle);
+  
+      // Append the item div to the carousel container
+      carouselContainer.appendChild(itemDiv);
+    });
+  });
+  </script> 
+
 <!-- Statcounter tracking code -->
   
 <!-- You can add a tracker to track page visits by creating an account at statcounter.com -->
 <!-- Default Statcounter code for MMEgo http://mmego.weizhuowang.com -->
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   var sc_project=12980100; 
   var sc_invisible=1; 
   var sc_security="4c6f0db3"; 
@@ -395,53 +441,13 @@
   Statcounter" href="https://statcounter.com/" target="_blank"><img
   class="statcounter" src="https://c.statcounter.com/12980100/0/4c6f0db3/1/"
   alt="Web Analytics Made Easy - Statcounter"
-  referrerPolicy="no-referrer-when-downgrade"></a></div></noscript> -->
+  referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
   <!-- End of Statcounter Code -->
 
 <!-- End of Statcounter tracking code -->
 
 
     <!-- End of Statcounter Code -->
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // Generate the array of image filenames dynamically
-        const imageFilenames = [];
-        for (let i = 1; i <= 36; i++) {
-          imageFilenames.push(i + '.png');
-        }
-      
-        // The base path to the images
-        const basePath = '/static/images/dataset_pic/';
-      
-        // Get the carousel container
-        const carouselContainer = document.getElementById('results-carousel');
-      
-        // Iterate over the image filenames
-        imageFilenames.forEach((filename, index) => {
-          // Create the carousel item div
-          const itemDiv = document.createElement('div');
-          itemDiv.className = 'item';
-      
-          // Create the image tag
-          const img = document.createElement('img');
-          img.src = basePath + filename;
-          img.alt = `Dataset example ${index + 1}`;
-      
-          // Create the subtitle
-          const subtitle = document.createElement('h2');
-          subtitle.className = 'subtitle has-text-centered';
-          subtitle.textContent = `Dataset example ${index + 1}`;
-      
-          // Append the image and subtitle to the item div
-          itemDiv.appendChild(img);
-          itemDiv.appendChild(subtitle);
-      
-          // Append the item div to the carousel container
-          carouselContainer.appendChild(itemDiv);
-        });
-      });
-      </script>
       
 
   </body>
