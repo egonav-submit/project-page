@@ -127,16 +127,29 @@
 
 
 
-<!-- Teaser figure -->
+<!-- Teaser video-->
 <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video poster="" id="tree" autoplay muted loop height="100%" style="border-radius: 10px;">
+        <source src="static/videos/teaser_vid.mp4"
+        type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        EgoNav enables a humanoid robot to navigate diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning.
+      </h2>
+    </div>
+  </div>
+</section>
+<!-- End teaser video -->
+
+<!-- Teaser figure -->
+<section class="hero is-small">
   <div class="container is-max-desktop">
     <div class="hero-body">
       <div class="method-picture">
         <img src="static/images/Teaser2.png" alt="EgoNav Teaser" style="border-radius: 10px;"/>
       </div>
-      <h2 class="subtitle has-text-centered">
-        EgoNav enables a humanoid robot to navigate diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning.
-      </h2>
     </div>
   </div>
 </section>
@@ -194,7 +207,7 @@
       <h2 class="title is-3">Method</h2>
       <div class="content has-text-justified">
         <div class="method-picture">
-          <img src="static/images/Method.png" alt="Method Picture"/>
+          <img src="static/images/Method.png" alt="Method Picture" style="max-width: 75%; display: block; margin: auto;"/>
         </div>
         <p>
           EgoNav learns a <strong>navigation prior</strong>&mdash;an embodiment-agnostic distribution of plausible future paths&mdash;serving as the missing middle layer between high-level task planning and low-level locomotion. The system is built on four design principles: <em>human-native</em> (learns from human walking data with no robot data), <em>scene-aware</em> (derives scene understanding from egocentric observations alone), <em>distributional</em> (models the full distribution of plausible paths), and <em>robot-ready</em> (deployable with real-time inference and latency compensation).
@@ -251,6 +264,7 @@
       <div class="content has-text-justified">
         <div class="method-picture">
           <img src="static/images/HybridGen.png" alt="Hybrid Generation"/>
+          <p class="has-text-centered" style="font-size: 14px; color: gray; margin-top: 8px;">Hybrid generation step search: Best-of-N, Collision, and Smoothness scores for different DDIM/DDPM step combinations. The optimal configuration is 5 DDIM + 5 DDPM steps.</p>
         </div>
         <p>
           The trajectory diffusion model is a non-autoregressive 46M-parameter UNet that predicts all 100 future steps (5 seconds at 20 Hz) simultaneously. Multi-head self-attention layers between downsample/upsample blocks capture long-range dependencies. The model takes 9-channel trajectory representations (x-y-z position + ortho6d orientation) and fuses conditions&mdash;visual memory encoding, DINOv3 video features, and past trajectory&mdash;via an adapter module with classifier-free guidance (10% condition dropout during training).
@@ -258,11 +272,6 @@
         <p>
           Standard DDPM sampling is too slow for real-time deployment, while DDIM sacrifices sample quality. Our hybrid generation scheme combines both: 5 DDIM steps quickly approximate the trajectory distribution, followed by 5 DDPM steps that recover fine-grained multi-modal details. This achieves 100&times; acceleration over full DDPM while maintaining distribution quality. With a batch size of 64, the model generates 110 trajectories/second, running at 1.7 Hz on a Jetson Thor.
         </p>
-        <div class="publication-video">
-          <!-- Video hidden for anonymous review -->
-          <p style="text-align:center; color:gray;">Video available after review.</p>
-        </div>
-        
       </div>
   </div>
 </div>
@@ -274,31 +283,39 @@
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container">
-      <h2 class="title is-3">Results</h2>
+      <h2 class="title is-3">Offline Evaluation</h2>
       <div class="content has-text-justified">
         <p>
           We evaluate EgoNav using three metrics: <strong>Collision-Free Score (CFS)</strong> measuring trajectory feasibility against the visual memory point cloud, <strong>Smoothness</strong> measuring velocity and acceleration consistency, and <strong>Best-of-N (minADE-K)</strong> measuring multi-modal coverage by selecting the closest of K trajectories to ground truth.
         </p>
 
         <div class="method-picture">
-          <img src="static/images/Metrics.png" alt="Metric Picture"/>
+          <img src="static/images/Metrics.png" alt="Metric Picture" style="max-width: 75%; display: block; margin: auto;"/>
         </div>
 
-        <iframe src="table_ablation.html" frameborder="0" width="100%" height="620px"></iframe>
+        <iframe src="table_ablation.html" frameborder="0" width="100%" height="620px" scrolling="no"></iframe>
 
         <p>
           Ablation studies show that each component contributes meaningfully: removing the semantic channel reduces collision avoidance by 5.1 points (the model cannot distinguish doors from walls), removing attention layers costs 2.6 points, and DINOv3 features, while showing modest offline improvement (+0.8), prove critical in real-world deployment for detecting glass walls and dynamic agents.
         </p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <h3 class="title is-4">Real-World Deployment</h3>
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container">
+      <h2 class="title is-3">Real-World Deployment</h2>
+      <div class="content has-text-justified">
         <p>
           We validate EgoNav through zero-shot deployment on a Unitree G1 humanoid across 37.5 minutes of autonomous operation covering 1,137 meters. The system achieves over 96% autonomous operation across static indoor, corridor, glass wall, and dynamic scene environments. Several natural behaviors emerge from the learned prior without explicit programming: the robot waits at closed doors until they open, finds gaps between pedestrians, and turns away from glass walls invisible to depth sensors.
         </p>
 
-        <iframe src="table_baseline.html" frameborder="0" width="100%" height="280px"></iframe>
+        <iframe src="table_baseline.html" frameborder="0" width="100%" height="300px" scrolling="no"></iframe>
       </div>
+    </div>
   </div>
-</div>
 </section>
 
 
