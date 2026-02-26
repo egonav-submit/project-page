@@ -18,9 +18,9 @@
   <meta charset="utf-8">
   <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
   <!-- Replace the content tag with appropriate information -->
-  <meta name="description" content="A new way to predict egocentric future motion">
-  <meta property="og:title" content="Egocentric Multimodal Trajectory Prediction"/>
-  <meta property="og:description" content="Egocentric Multimodal Trajectory Prediction"/>
+  <meta name="description" content="Learning humanoid navigation from human walking data with zero robot data">
+  <meta property="og:title" content="EgoNav: Learning Humanoid Navigation from Human Data"/>
+  <meta property="og:description" content="Learning humanoid navigation from human walking data with zero robot data"/>
   <meta property="og:url" content=""/>
   <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
   <meta property="og:image" content="static/images/banner_image.png" />
@@ -28,17 +28,17 @@
   <meta property="og:image:height" content="930"/>
 
 
-  <meta name="twitter:title" content="Egocentric Multimodal Trajectory Prediction">
-  <meta name="twitter:description" content="A new way to predict a distribution of egocentric future motion">
+  <meta name="twitter:title" content="EgoNav: Learning Humanoid Navigation from Human Data">
+  <meta name="twitter:description" content="Learning humanoid navigation from human walking data with zero robot data">
   <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X600-->
   <meta name="twitter:image" content="static/images/banner_image.png">
   <meta name="twitter:card" content="summary_large_image">
   <!-- Keywords for your paper to be indexed by-->
-  <meta name="keywords" content="Egocentric Trajectory Prediction, Scene Understanding, Diffusion Model">
+  <meta name="keywords" content="Humanoid Navigation, Egocentric Trajectory Prediction, Diffusion Model, Visual Memory, Human-to-Robot Transfer">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-  <title>Egocentric Multimodal Trajectory Prediction</title>
+  <title>EgoNav: Learning Humanoid Navigation from Human Data</title>
   <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
   rel="stylesheet">
@@ -66,7 +66,7 @@
       <div class="container is-max-desktop">
         <div class="columns is-centered">
           <div class="column has-text-centered">
-            <h1 class="title is-1 publication-title">Egocentric Scene-aware Human Trajectory Prediction</h1>
+            <h1 class="title is-1 publication-title">EgoNav: Learning Humanoid Navigation from Human Data</h1>
             <div class="is-size-5 publication-authors">
               <span class="author-block">Anonymous Authors</span>
             </div>
@@ -137,7 +137,7 @@
         type="video/mp4">
       </video>
       <h2 class="subtitle has-text-centered">
-        Given past trajectory and the current scene, our method predicts the discrete distribution of possible future trajectory of the user.
+        EgoNav enables a humanoid robot to navigate diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning.
       </h2>
     </div>
   </div>
@@ -152,7 +152,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Wearable collaborative robots stand to assist human wearers who need fall prevention assistance or wear exoskeletons. Such a robot needs to be able to predict the ego motion of the wearer based on egocentric vision and the surrounding scene. In this work, we leveraged body-mounted cameras and sensors to anticipate the trajectory of human wearers through complex surroundings. To facilitate research in ego-motion prediction, we have collected a comprehensive walking scene navigation dataset centered on the user's perspective. We present a method to predict human motion conditioning on the surrounding static scene. Our method leverages a diffusion model to produce a distribution of potential future trajectories, taking into account the user's observation of the environment. We introduce a compact representation to encode the user's visual memory of the surroundings, as well as an efficient sample-generating technique to speed up real-time inference of a diffusion model. We ablate our model and compare it to baselines, and results show that our model outperforms existing methods on key metrics of collision avoidance and trajectory mode coverage. 
+            We present EgoNav, a system that enables a humanoid robot to traverse diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning. A diffusion model predicts distributions of plausible future trajectories conditioned on past trajectory, a 360&deg; visual memory fusing color, depth, and semantics, and video features from a frozen DINOv3 backbone that capture appearance cues invisible to depth sensors. A hybrid sampling scheme achieves real-time inference in 10 denoising steps, and a receding-horizon controller selects paths from the predicted distribution. We validate EgoNav through offline evaluations, where it outperforms baselines in collision avoidance and multi-modal coverage, and through zero-shot deployment on a Unitree G1 humanoid across unseen indoor and outdoor environments. Behaviors such as waiting for doors to open, navigating around pedestrians, and avoiding glass walls emerge naturally from the learned prior. We release the dataset and trained models.
           </p>
         </div>
       </div>
@@ -169,19 +169,13 @@
       <h2 class="title is-3">Dataset</h2>
       <div class="content has-text-justified">
         <p>
-          Our Egocentric Navigation Dataset is collected around Stanford university campus and its vicinity. The dataset has 34 collections, each approximately 7 minutes spanning over 600 meters, designed to capture a wide range of interactions with the environment. The dataset encompasses various weather conditions (rain, sunny, overcast), surface textures (glass, solid, glossy, reflective, water), and environmental features (stairs, ramps, flat grounds, hills, off-road paths), alongside dynamic obstacles, including humans.
+          Our Egocentric Navigation Dataset comprises 300 minutes (5 hours) of human walking data covering over 25 km across diverse campus environments. The dataset contains 44 sequences, each approximately 7 minutes spanning 600 meters, recorded at 20 Hz. It encompasses various weather conditions (rain, sunny, overcast), surface textures (glass, solid, glossy, reflective, water), and environmental features (stairs, ramps, flat grounds, hills, off-road paths), alongside dynamic obstacles including pedestrians.
         </p>
         <p>
-          Recorded at a 20Hz sampling rate, the dataset includes comprehensive state and visual information to capture the nuances in human behavior: 
-          
-          States: 6 degrees of freedom (dof) torso pose in a global frame, leg joint angles (hips and knees of both legs), torso linear and angular velocity, and gait frequency. 
-          
-          Visual: aligned color and depth images, semantic segmentation masks, and visual memory frames generated. 
-          
-          Totaling 198 minutes of data (over 400GB), in practice, we find it is possible to train a very high-quality model even with a smaller dataset size. Therefore we curated a high-quality pilot dataset with roughly 15% of the full data. This allows us to quickly iterate with faster training and an acceptable amount of performance degradation. The performance has been qualitatively compared in the ablation.
+          Data is collected using an Intel RealSense T265 for SLAM-based 6-DoF localization and a RealSense D455 for aligned RGBD capture. At each timestep, the dataset provides: 6-DoF torso pose in a global frame, leg joint angles, torso linear and angular velocities, gait frequency, aligned color and depth images, semantic segmentation masks (8 classes via DINOv2 + Mask2Former), and precomputed visual memory panoramas.
         </p>
         <p>
-          We hope to addresses critical gaps by providing dense, high-frequency logs with rich visual and state information. And we are committed to open-sourcing our dataset following the de-identification of all faces within the data. We will also provide the software tools to collect and process the data, in case anyone wishes to extend the dataset or collect similar data in different environments.
+          We are committed to open-sourcing the dataset and providing the software tools for data collection and processing, enabling others to extend the dataset or collect similar data in different environments.
         </p>
       </div>
       <div id="results-carousel" class="carousel results-carousel" style="max-width: 848px; margin: auto;">
@@ -205,11 +199,11 @@
           <img src="static/images/Method.png" alt="Method Picture"/>
         </div>
         <p>
-          The goal of this work is to predict the possible paths of a person in a cluttered environment. A trajectory is defined as a sequence of 6D poses (translation and orientation) of a person navigating in the 3D world. At each time step t, our model uses the past trajectory to predict likely future trajectories. In addition, the prediction must be conditioned on the observation of surroundings.  The visual observation S encodes the appearance, geometry, and semantics of the environment captured by wearable visual and depth sensors. 
+          EgoNav learns a <strong>navigation prior</strong>&mdash;an embodiment-agnostic distribution of plausible future paths&mdash;serving as the missing middle layer between high-level task planning and low-level locomotion. The system is built on four design principles: <em>human-native</em> (learns from human walking data with no robot data), <em>scene-aware</em> (derives scene understanding from egocentric observations alone), <em>distributional</em> (models the full distribution of plausible paths), and <em>robot-ready</em> (deployable with real-time inference and latency compensation).
         </p>
 
         <p>
-          Therefore, our method takes in the past trajectory of the person and a short history of RGBD images. The color images are semantically labeled by DINOv2 into 8 semantic channels, while the depth images go through a preprocessing pipeline that filters out erroneously filled edges. We transform the past trajectory from a global coordinate frame to an egocentric frame defined by the gravity vector as -Z and forward-facing direction as +X. The collected images are them project and globally aligned to create a single panorama in the egocentric coordinate frame, referred to as "visual memory". Conditioning on the visual memory and the past ego trajectory, a diffusion model is trained to predict the future trajectory, along with encoded visual observations as auxiliary outputs. Finally, we use the VAE decoder to recover the expected future panorama. Combining with the hybrid generation method illustrated in the later section, we aim to provide a fast and effective method in predicting the distribution of the future states conditioning on the observed environment.
+          The method takes in past trajectory and a short history of RGBD images. Color images are semantically labeled by DINOv2 with Mask2Former into 8 classes (ground, stair, door, wall, obstacle, movable, rough ground, unlabeled). Depth frames go through a Canny edge filter to remove stereo artifacts. All frames are projected and aligned into a 360&deg; egocentric panorama called "visual memory". Additionally, a frozen DINOv3 ViT backbone extracts video features that capture appearance cues invisible to depth (e.g., glass walls, dynamic agents). Conditioning on the visual memory, DINOv3 features, and past trajectory, a diffusion model generates distributions of future trajectories. A receding-horizon controller then selects collision-free paths from the predicted distribution for real-time robot deployment.
         </p>
       </div>
     </div>
@@ -229,9 +223,15 @@
         </div>
 
         <p>
-          Visual memory is an ego-perspective, panoramic view representation of the surroundings. Given the camera's intrinsic and extrinsic parameters, images in different frames and channels can be projected to a single point cloud in the global frame. A distance-based filter is applied to remove points too far away from the current pose. The points are then projected back to the current ego frame to form a coherent representation of all the scene information gathered.
+          Visual memory is a 360&deg; ego-perspective panoramic representation of the surroundings, with dimensions 180&times;360&times;5 (1 pixel per degree) covering RGB, depth, and semantic channels. A rolling buffer of RGBD frames is accumulated into a single point cloud in the global frame using camera intrinsic and extrinsic parameters. A distance-based filter removes far-away points, and the remaining points are reprojected into the current egocentric frame to form a coherent panorama.
+        </p>
 
-          It is important to note that the visual memory representation holds a lot more relevant information than just a single image. As shown below, A single image from a stereo camera only has a narrow FOV pointing directly in front. It fails to capture the objects and paths in the scene that are highly relevant to the prediction, requiring many individual frames to be sent to the prediction module, relying on the model's capability to extract useful information. Meanwhile, the visual memory stitches the past frames together and integrates multi-modal inputs all into one single image, greatly improving the model and storage efficiency.
+        <p>
+          The visual memory is encoded by a pretrained spatial VAE into an 8&times;20&times;8 latent feature map that preserves geometric layout, then further compressed to a 64-dimensional embedding via a lightweight adapter. This entire pipeline runs on a Jetson Orin NX CPU within 30ms.
+        </p>
+
+        <p>
+          Compared to a single camera image with a narrow ~90&deg; FOV, the visual memory captures stairs, side paths, and wall information that would otherwise be missed. It integrates multi-modal inputs into one compact representation, greatly improving model and storage efficiency.
         </p>
 
         <div class="method-picture">
@@ -249,19 +249,18 @@
 <section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container">
-      <h2 class="title is-3">Prediction Model and Hybrid Generation</h2>
+      <h2 class="title is-3">Diffusion Model and Hybrid Generation</h2>
       <div class="content has-text-justified">
         <div class="method-picture">
           <img src="static/images/Model.png" alt="Model Picture"/>
         </div>
         <p>
-          A conventional DDPM sampling method, while capable of producing high-quality predictions, operates at a pace that is impractical for applications requiring immediate responses, such as navigational aids or interactive systems. This limitation is further pronounced when attempting to generate a distribution of future trajectories, as multiple denoising sequences are necessary to produce a substantial number of samples, exacerbating the time constraints. Conversely, while DDIM offers a considerable acceleration in generating predictions, it does so at the expense of sample quality—a compromise that is untenable for applications where the fidelity of predicted trajectories directly impacts functionality and safety.
+          The trajectory diffusion model is a non-autoregressive 46M-parameter UNet that predicts all 100 future steps (5 seconds at 20 Hz) simultaneously. Multi-head self-attention layers between downsample/upsample blocks capture long-range dependencies. The model takes 9-channel trajectory representations (x-y-z position + ortho6d orientation) and fuses conditions&mdash;visual memory encoding, DINOv3 video features, and past trajectory&mdash;via an adapter module with classifier-free guidance (10% condition dropout during training).
         </p>
         <p>
-          To address these challenges, we introduce a hybrid generation scheme that combines the strengths of both methods. Hybrid generation operates by initiating the generation process with a DDIM-like approach to quickly approximate the trajectory distribution, followed by a refinement phase using the DDPM. Essentially retaining the multimodal gradient landscape at the end of the diffusion process, ensuring that the final output maintains the intricate details and nuanced variations captured by a traditional DDPM without the accompanying latency. In practice, we were able to achieve 50x acceleration in generating samples with minimal performance drop.
+          Standard DDPM sampling is too slow for real-time deployment, while DDIM sacrifices sample quality. Our hybrid generation scheme combines both: 5 DDIM steps quickly approximate the trajectory distribution, followed by 5 DDPM steps that recover fine-grained multi-modal details. This achieves 100&times; acceleration over full DDPM while maintaining distribution quality. With a batch size of 64, the model generates 110 trajectories/second, running at 1.7 Hz on a Jetson Thor.
         </p>
         <div class="publication-video">
-          <!-- Youtube embed code here -->
           <!-- Video hidden for anonymous review -->
           <p style="text-align:center; color:gray;">Video available after review.</p>
         </div>
@@ -277,22 +276,23 @@
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container">
-      <h2 class="title is-3">Results and evaluation metrics</h2>
+      <h2 class="title is-3">Results</h2>
       <div class="content has-text-justified">
         <p>
-          A visual illustration of three metrics is shown below:
+          We evaluate EgoNav using three metrics: <strong>Collision-Free Score (CFS)</strong> measuring trajectory feasibility against the visual memory point cloud, <strong>Smoothness</strong> measuring velocity and acceleration consistency, and <strong>Best-of-N (minADE-K)</strong> measuring multi-modal coverage by selecting the closest of K trajectories to ground truth.
         </p>
 
         <div class="method-picture">
           <img src="static/images/Metrics.png" alt="Metric Picture"/>
         </div>
 
-        <!-- Embedding table.html into your main document -->
-        <iframe src="table_ablation.html" frameborder="0" width="100%" height="465px"></iframe> 
-
-        <iframe src="table_baseline.html" frameborder="0" width="100%" height="200px"></iframe> 
         <p>
-          We found two previous papers that build to solve similar task as we do. The CXA transformer by Jianing et al. proposes a novel cascaded cross-attention transformer block to fuse in multimodal inputs. And then uses transformer decoder to generate the predicted trajectory autoregressively. The LSTM-VAE is another popular method commonly used in various trajectory prediction task. All three models are trained on the same dataset and evaluated by the same data and metrics.
+          Ablation studies show that each component contributes meaningfully: removing the semantic channel reduces collision avoidance by 5.1 points (the model cannot distinguish doors from walls), removing attention layers costs 2.6 points, and DINOv3 features, while showing modest offline improvement (+0.8), prove critical in real-world deployment for detecting glass walls and dynamic agents.
+        </p>
+
+        <h3 class="title is-4">Real-World Deployment</h3>
+        <p>
+          We validate EgoNav through zero-shot deployment on a Unitree G1 humanoid across 37.5 minutes of autonomous operation covering 1,137 meters. The system achieves over 96% autonomous operation across static indoor, corridor, glass wall, and dynamic scene environments. Several natural behaviors emerge from the learned prior without explicit programming: the robot waits at closed doors until they open, finds gaps between pedestrians, and turns away from glass walls invisible to depth sensors.
         </p>
       </div>
   </div>
@@ -330,7 +330,7 @@
     <div class="container is-max-desktop content">
       <h2 class="title">BibTeX</h2>
       <pre><code>@article{anonymous2026egonav,
-        title={Egocentric Scene-aware Human Trajectory Prediction},
+        title={Learning Humanoid Navigation from Human Data},
         author = {Anonymous},
         journal={Under Review},
         year={2026},
