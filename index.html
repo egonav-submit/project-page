@@ -180,13 +180,7 @@
       <h2 class="title is-3">Dataset</h2>
       <div class="content has-text-justified">
         <p>
-          Our Egocentric Navigation Dataset comprises 300 minutes (5 hours) of human walking data covering over 25 km across diverse campus environments. The dataset contains 44 sequences, each approximately 7 minutes spanning 600 meters, recorded at 20 Hz. It encompasses various weather conditions (rain, sunny, overcast), surface textures (glass, solid, glossy, reflective, water), and environmental features (stairs, ramps, flat grounds, hills, off-road paths), alongside dynamic obstacles including pedestrians.
-        </p>
-        <p>
-          Data is collected using an Intel RealSense T265 for SLAM-based 6-DoF localization and a RealSense D455 for aligned RGBD capture. At each timestep, the dataset provides: 6-DoF torso pose in a global frame, leg joint angles, torso linear and angular velocities, gait frequency, aligned color and depth images, semantic segmentation masks (8 classes via DINOv2 + Mask2Former), and precomputed visual memory panoramas.
-        </p>
-        <p>
-          We are committed to open-sourcing the dataset and providing the software tools for data collection and processing, enabling others to extend the dataset or collect similar data in different environments.
+          300 minutes (5 hours) of human walking data covering 25+ km across diverse campus environments. 44 sequences at 20 Hz, spanning varied weather, surfaces, and dynamic obstacles. Each timestep provides 6-DoF pose, RGBD images, semantic segmentation (8 classes), and precomputed visual memory panoramas. Dataset and tools will be released after review.
         </p>
       </div>
       <div id="results-carousel" class="carousel results-carousel" style="max-width: 848px; margin: auto;">
@@ -210,11 +204,10 @@
           <img src="static/images/Method.png" alt="Method Picture" style="max-width: 75%; display: block; margin: auto;"/>
         </div>
         <p>
-          EgoNav learns a <strong>navigation prior</strong>&mdash;an embodiment-agnostic distribution of plausible future paths&mdash;serving as the missing middle layer between high-level task planning and low-level locomotion. The system is built on four design principles: <em>human-native</em> (learns from human walking data with no robot data), <em>scene-aware</em> (derives scene understanding from egocentric observations alone), <em>distributional</em> (models the full distribution of plausible paths), and <em>robot-ready</em> (deployable with real-time inference and latency compensation).
+          EgoNav learns a <strong>navigation prior</strong>&mdash;an embodiment-agnostic distribution of plausible future paths&mdash;bridging high-level planning and low-level locomotion. The system is <em>human-native</em> (no robot data), <em>scene-aware</em> (egocentric observations only), <em>distributional</em> (multi-modal predictions), and <em>robot-ready</em> (real-time with latency compensation).
         </p>
-
         <p>
-          The method takes in past trajectory and a short history of RGBD images. Color images are semantically labeled by DINOv2 with Mask2Former into 8 classes (ground, stair, door, wall, obstacle, movable, rough ground, unlabeled). Depth frames go through a Canny edge filter to remove stereo artifacts. All frames are projected and aligned into a 360&deg; egocentric panorama called "visual memory". Additionally, a frozen DINOv3 ViT backbone extracts video features that capture appearance cues invisible to depth (e.g., glass walls, dynamic agents). Conditioning on the visual memory, DINOv3 features, and past trajectory, a diffusion model generates distributions of future trajectories. A receding-horizon controller then selects collision-free paths from the predicted distribution for real-time robot deployment.
+          Given past trajectory and RGBD history, frames are semantically labeled into 8 classes and fused into a 360&deg; egocentric panorama ("visual memory"). A frozen DINOv3 backbone captures appearance cues invisible to depth (glass walls, dynamic agents). A diffusion model generates trajectory distributions, and a receding-horizon controller selects collision-free paths for deployment.
         </p>
       </div>
     </div>
@@ -234,15 +227,7 @@
         </div>
 
         <p>
-          Visual memory is a 360&deg; ego-perspective panoramic representation of the surroundings, with dimensions 180&times;360&times;5 (1 pixel per degree) covering RGB, depth, and semantic channels. A rolling buffer of RGBD frames is accumulated into a single point cloud in the global frame using camera intrinsic and extrinsic parameters. A distance-based filter removes far-away points, and the remaining points are reprojected into the current egocentric frame to form a coherent panorama.
-        </p>
-
-        <p>
-          The visual memory is encoded by a pretrained spatial VAE into an 8&times;20&times;8 latent feature map that preserves geometric layout, then further compressed to a 64-dimensional embedding via a lightweight adapter. This entire pipeline runs on a Jetson Orin NX CPU within 30ms.
-        </p>
-
-        <p>
-          Compared to a single camera image with a narrow ~90&deg; FOV, the visual memory captures stairs, side paths, and wall information that would otherwise be missed. It integrates multi-modal inputs into one compact representation, greatly improving model and storage efficiency.
+          A 360&deg; panoramic representation (180&times;360&times;5) fusing RGB, depth, and semantic channels. RGBD frames are accumulated into a point cloud, filtered by distance, and reprojected into the current egocentric frame. Encoded by a pretrained spatial VAE into a 64-dim embedding, running within 30ms on a Jetson Orin NX. Compared to a single ~90&deg; FOV camera, the visual memory captures far more scene context in one compact representation.
         </p>
 
         <div class="method-picture">
@@ -267,10 +252,7 @@
           <p class="has-text-centered" style="font-size: 14px; color: gray; margin-top: 8px;">Hybrid generation step search: Best-of-N, Collision, and Smoothness scores for different DDIM/DDPM step combinations. The optimal configuration is 5 DDIM + 5 DDPM steps.</p>
         </div>
         <p>
-          The trajectory diffusion model is a non-autoregressive 46M-parameter UNet that predicts all 100 future steps (5 seconds at 20 Hz) simultaneously. Multi-head self-attention layers between downsample/upsample blocks capture long-range dependencies. The model takes 9-channel trajectory representations (x-y-z position + ortho6d orientation) and fuses conditions&mdash;visual memory encoding, DINOv3 video features, and past trajectory&mdash;via an adapter module with classifier-free guidance (10% condition dropout during training).
-        </p>
-        <p>
-          Standard DDPM sampling is too slow for real-time deployment, while DDIM sacrifices sample quality. Our hybrid generation scheme combines both: 5 DDIM steps quickly approximate the trajectory distribution, followed by 5 DDPM steps that recover fine-grained multi-modal details. This achieves 100&times; acceleration over full DDPM while maintaining distribution quality. With a batch size of 64, the model generates 110 trajectories/second, running at 1.7 Hz on a Jetson Thor.
+          A 46M-parameter UNet predicts all 100 future steps (5 sec at 20 Hz) non-autoregressively, conditioned on visual memory, DINOv3 features, and past trajectory via classifier-free guidance. Our hybrid scheme&mdash;5 DDIM steps followed by 5 DDPM steps&mdash;achieves 100&times; acceleration over full DDPM while preserving multi-modal quality, generating 110 trajectories/sec at 1.7 Hz on a Jetson Thor.
         </p>
       </div>
   </div>
@@ -286,7 +268,7 @@
       <h2 class="title is-3">Offline Evaluation</h2>
       <div class="content has-text-justified">
         <p>
-          We evaluate EgoNav using three metrics: <strong>Collision-Free Score (CFS)</strong> measuring trajectory feasibility against the visual memory point cloud, <strong>Smoothness</strong> measuring velocity and acceleration consistency, and <strong>Best-of-N (minADE-K)</strong> measuring multi-modal coverage by selecting the closest of K trajectories to ground truth.
+          Three metrics: <strong>Collision-Free Score (CFS)</strong>, <strong>Smoothness</strong>, and <strong>Best-of-N (minADE-K)</strong>.
         </p>
 
         <div class="method-picture">
@@ -296,7 +278,7 @@
         <iframe src="table_ablation.html" frameborder="0" width="100%" height="620px" scrolling="no"></iframe>
 
         <p>
-          Ablation studies show that each component contributes meaningfully: removing the semantic channel reduces collision avoidance by 5.1 points (the model cannot distinguish doors from walls), removing attention layers costs 2.6 points, and DINOv3 features, while showing modest offline improvement (+0.8), prove critical in real-world deployment for detecting glass walls and dynamic agents.
+          Each component contributes meaningfully: semantic channel &minus;5.1 collision (can't distinguish doors from walls), attention &minus;2.6, and DINOv3 features prove critical in real-world glass/dynamic scenes despite modest offline gains.
         </p>
       </div>
     </div>
@@ -309,7 +291,7 @@
       <h2 class="title is-3">Real-World Deployment</h2>
       <div class="content has-text-justified">
         <p>
-          We validate EgoNav through zero-shot deployment on a Unitree G1 humanoid across 37.5 minutes of autonomous operation covering 1,137 meters. The system achieves over 96% autonomous operation across static indoor, corridor, glass wall, and dynamic scene environments. Several natural behaviors emerge from the learned prior without explicit programming: the robot waits at closed doors until they open, finds gaps between pedestrians, and turns away from glass walls invisible to depth sensors.
+          Zero-shot deployment on a Unitree G1 humanoid: 37.5 minutes, 1,137 meters, over 96% autonomous across static, corridor, glass, and dynamic scenes. Emergent behaviors include waiting at doors, navigating around pedestrians, and avoiding glass walls.
         </p>
 
         <iframe src="table_baseline.html" frameborder="0" width="100%" height="300px" scrolling="no"></iframe>
