@@ -127,22 +127,20 @@
 
 
 
-<!-- Teaser video-->
+<!-- Teaser figure -->
 <section class="hero teaser">
   <div class="container is-max-desktop">
     <div class="hero-body">
-      <video poster="" id="tree" autoplay muted loop height="100%" style="border-radius: 10px;">
-        <!-- Your video here -->
-        <source src="static/videos/teaser_vid.mp4"
-        type="video/mp4">
-      </video>
+      <div class="method-picture">
+        <img src="static/images/Teaser2.png" alt="EgoNav Teaser" style="border-radius: 10px;"/>
+      </div>
       <h2 class="subtitle has-text-centered">
         EgoNav enables a humanoid robot to navigate diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning.
       </h2>
     </div>
   </div>
 </section>
-<!-- End teaser video -->
+<!-- End teaser figure -->
 
 <!-- Paper abstract -->
 <section class="section hero is-light">
@@ -252,7 +250,7 @@
       <h2 class="title is-3">Diffusion Model and Hybrid Generation</h2>
       <div class="content has-text-justified">
         <div class="method-picture">
-          <img src="static/images/Model.png" alt="Model Picture"/>
+          <img src="static/images/HybridGen.png" alt="Hybrid Generation"/>
         </div>
         <p>
           The trajectory diffusion model is a non-autoregressive 46M-parameter UNet that predicts all 100 future steps (5 seconds at 20 Hz) simultaneously. Multi-head self-attention layers between downsample/upsample blocks capture long-range dependencies. The model takes 9-channel trajectory representations (x-y-z position + ortho6d orientation) and fuses conditions&mdash;visual memory encoding, DINOv3 video features, and past trajectory&mdash;via an adapter module with classifier-free guidance (10% condition dropout during training).
@@ -286,6 +284,8 @@
           <img src="static/images/Metrics.png" alt="Metric Picture"/>
         </div>
 
+        <iframe src="table_ablation.html" frameborder="0" width="100%" height="620px"></iframe>
+
         <p>
           Ablation studies show that each component contributes meaningfully: removing the semantic channel reduces collision avoidance by 5.1 points (the model cannot distinguish doors from walls), removing attention layers costs 2.6 points, and DINOv3 features, while showing modest offline improvement (+0.8), prove critical in real-world deployment for detecting glass walls and dynamic agents.
         </p>
@@ -294,6 +294,8 @@
         <p>
           We validate EgoNav through zero-shot deployment on a Unitree G1 humanoid across 37.5 minutes of autonomous operation covering 1,137 meters. The system achieves over 96% autonomous operation across static indoor, corridor, glass wall, and dynamic scene environments. Several natural behaviors emerge from the learned prior without explicit programming: the robot waits at closed doors until they open, finds gaps between pedestrians, and turns away from glass walls invisible to depth sensors.
         </p>
+
+        <iframe src="table_baseline.html" frameborder="0" width="100%" height="280px"></iframe>
       </div>
   </div>
 </div>

@@ -1,56 +1,45 @@
 <table style="width:100%; border-collapse: collapse;font-size: 18px;">
-  <caption style="font-size: 22px;">Table 1. Metric comparison table across ablations</caption>
+  <caption style="font-size: 22px;">Table 1. Offline evaluation across ablations and baselines. <b>Best</b>, <i><u>2nd</u></i>.</caption>
   <thead>
-    <tr style="border-bottom: 1px solid black;">
-      <th style="text-align: left; padding: 8px;">Ablation</th>
+    <tr style="border-bottom: 2px solid black;">
+      <th style="text-align: left; padding: 8px;">Full System (Full Data)</th>
       <th style="text-align: left; padding: 8px;">Collision ↑</th>
       <th style="text-align: left; padding: 8px;">Smoothness ↑</th>
       <th style="text-align: left; padding: 8px;">Best of 1 ↓</th>
-      <th style="text-align: left; padding: 8px;">Best of 15↓</th>
+      <th style="text-align: left; padding: 8px;">Best of 15 ↓</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td style="padding: 8px;">Ground Truth</td>
+      <td style="padding: 8px;">GT</td>
       <td style="padding: 8px;">97.6</td>
-      <td style="padding: 8px;">-</td>
-      <td style="padding: 8px;">-</td>
-      <td style="padding: 8px;">-</td>
+      <td style="padding: 8px;">∞</td>
+      <td style="padding: 8px;">0.0</td>
+      <td style="padding: 8px;">0.0</td>
     </tr>
     <tr>
-      <td style="padding: 8px;">Ours (Full dataset)</td>
-      <td style="padding: 8px; font-weight: bold;">90.6</td>
-      <td style="padding: 8px; font-weight: bold;">4.76</td>
-      <td style="padding: 8px; font-weight: bold;">0.81</td>
-      <td style="padding: 8px; font-weight: bold;">0.41</td>
+      <td style="padding: 8px;">Ours</td>
+      <td style="padding: 8px; font-weight: bold;">91.4</td>
+      <td style="padding: 8px; font-weight: bold;">4.82</td>
+      <td style="padding: 8px; font-weight: bold;">0.76</td>
+      <td style="padding: 8px; font-weight: bold;">0.39</td>
     </tr>
     <tr>
-      <td style="padding: 8px;">w/o visual memory prediction</td>
-      <td style="padding: 8px; font-style: italic;">89.3</td>
-      <td style="padding: 8px;">3.13</td>
-      <td style="padding: 8px;">0.91</td>
-      <td style="padding: 8px;">0.50</td>
+      <td style="padding: 8px;">w/o DINOv3 features</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">90.6</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">4.76</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">0.81</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">0.41</td>
     </tr>
-    <tr>
-      <td style="padding: 8px;">Ours (Pilot Dataset)</td>
+    <tr style="border-bottom: 1px solid black;">
+      <td style="padding: 8px;">Ours - Pilot</td>
       <td style="padding: 8px;">89.2</td>
       <td style="padding: 8px;">2.04</td>
-      <td style="padding: 8px; font-style: italic;">0.87</td>
-      <td style="padding: 8px; font-style: italic;">0.47</td>
+      <td style="padding: 8px;">0.87</td>
+      <td style="padding: 8px;">0.47</td>
     </tr>
     <tr>
-      <td style="padding: 8px;">w/ Markovian past state</td>
-      <td style="padding: 8px;">88.8</td>
-      <td style="padding: 8px;">1.56</td>
-      <td style="padding: 8px;">1.04</td>
-      <td style="padding: 8px;">0.52</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px;">w/ Hybrid generation (I20 P10)</td>
-      <td style="padding: 8px;">88.7</td>
-      <td style="padding: 8px;">2.17</td>
-      <td style="padding: 8px;">0.89</td>
-      <td style="padding: 8px;">0.49</td>
+      <td style="padding: 8px; font-weight: bold;" colspan="5">Component Ablations (Pilot Data)</td>
     </tr>
     <tr>
       <td style="padding: 8px;">w/o attention</td>
@@ -60,25 +49,42 @@
       <td style="padding: 8px;">0.49</td>
     </tr>
     <tr>
-      <td style="padding: 8px;">w/ DDIM generation (n=30)</td>
-      <td style="padding: 8px;">85.3</td>
-      <td style="padding: 8px;">0.46</td>
-      <td style="padding: 8px;">0.92</td>
-      <td style="padding: 8px;">0.52</td>
-    </tr>
-    <tr>
-      <td style="padding: 8px;">w/o semantic (RGBD only)</td>
+      <td style="padding: 8px;">w/o semantic</td>
       <td style="padding: 8px;">84.1</td>
-      <td style="padding: 8px; font-style: italic;">4.17</td>
+      <td style="padding: 8px;">4.17</td>
       <td style="padding: 8px;">0.91</td>
       <td style="padding: 8px;">0.53</td>
     </tr>
-    <tr>
-      <td style="padding: 8px;">w/o visual input (Traj only)</td>
+    <tr style="border-bottom: 1px solid black;">
+      <td style="padding: 8px;">w/o VM or DINO (Traj only)</td>
       <td style="padding: 8px;">82.5</td>
       <td style="padding: 8px;">2.04</td>
       <td style="padding: 8px;">1.19</td>
       <td style="padding: 8px;">0.48</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px; font-weight: bold;" colspan="5">Baselines (Pilot Data)</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">Ours - Pilot</td>
+      <td style="padding: 8px; font-weight: bold;">89.2</td>
+      <td style="padding: 8px;">2.04</td>
+      <td style="padding: 8px; font-weight: bold;">0.87</td>
+      <td style="padding: 8px; font-weight: bold;">0.47</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">VAE-LSTM</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">84.5</td>
+      <td style="padding: 8px; font-weight: bold;">9.09</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">1.01</td>
+      <td style="padding: 8px;">N/A</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">CXA Transformer</td>
+      <td style="padding: 8px;">80.3</td>
+      <td style="padding: 8px; font-style: italic; text-decoration: underline;">3.70</td>
+      <td style="padding: 8px;">1.25</td>
+      <td style="padding: 8px;">N/A</td>
     </tr>
   </tbody>
 </table>

@@ -1,36 +1,54 @@
 <table style="width:100%; border-collapse: collapse;font-size: 18px;">
-    <caption style="font-size: 22px;">Table 2. Metric comparison table across baselines</caption>
-    <thead>
-      <tr style="border-bottom: 1px solid black;">
-        <th style="text-align: left; padding: 8px;">Model</th>
-        <th style="text-align: left; padding: 8px;">Collision ↑</th>
-        <th style="text-align: left; padding: 8px;">Smoothness ↑</th>
-        <th style="text-align: left; padding: 8px;">Best of 1 ↓</th>
-        <th style="text-align: left; padding: 8px;">Best of 15 ↓</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td style="padding: 8px;">CXA Transformer</td>
-        <td style="padding: 8px;">80.3</td>
-        <td style="padding: 8px;">3.70</td>
-        <td style="padding: 8px;">1.25</td>
-        <td style="padding: 8px;">N/A</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px;">LSTM-VAE</td>
-        <td style="padding: 8px;">84.5</td>
-        <td style="padding: 8px; font-weight: bold;">0.09</td>
-        <td style="padding: 8px;">1.01</td>
-        <td style="padding: 8px;">N/A</td>
-      </tr>
-      <tr>
-        <td style="padding: 8px;">Ours</td>
-        <td style="padding: 8px; font-weight: bold;">89.2</td>
-        <td style="padding: 8px;">2.04</td>
-        <td style="padding: 8px; font-weight: bold;">0.87</td>
-        <td style="padding: 8px; font-weight: bold;">0.472</td>
-      </tr>
-    </tbody>
-  </table>
-  
+  <caption style="font-size: 22px;">Table 2. Real-world deployment statistics on the Unitree G1.</caption>
+  <thead>
+    <tr style="border-bottom: 2px solid black;">
+      <th style="text-align: left; padding: 8px;"></th>
+      <th style="text-align: left; padding: 8px;">Static</th>
+      <th style="text-align: left; padding: 8px;">Corridor</th>
+      <th style="text-align: left; padding: 8px;">Glass</th>
+      <th style="text-align: left; padding: 8px;">Dynamic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 8px;">Duration (min)</td>
+      <td style="padding: 8px;">16</td>
+      <td style="padding: 8px;">7.5</td>
+      <td style="padding: 8px;">6.5 (5)</td>
+      <td style="padding: 8px;">7.5</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">Distance (m)</td>
+      <td style="padding: 8px;">471</td>
+      <td style="padding: 8px;">240</td>
+      <td style="padding: 8px;">225 (120)</td>
+      <td style="padding: 8px;">201</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">Interventions</td>
+      <td style="padding: 8px;">9</td>
+      <td style="padding: 8px;">1</td>
+      <td style="padding: 8px;">5 (11)</td>
+      <td style="padding: 8px;">6</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">Interventions/min</td>
+      <td style="padding: 8px;">0.56</td>
+      <td style="padding: 8px;">0.13</td>
+      <td style="padding: 8px;">0.77 (2.2)</td>
+      <td style="padding: 8px;">0.80</td>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">Autonomous time %</td>
+      <td style="padding: 8px;">97.2</td>
+      <td style="padding: 8px; font-weight: bold;">99.3</td>
+      <td style="padding: 8px;">96.2 (89.0)</td>
+      <td style="padding: 8px;">96.0</td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="5" style="padding: 8px; font-size: 14px;">Glass column: values in parentheses are w/o DINOv3.</td>
+    </tr>
+  </tfoot>
+</table>
