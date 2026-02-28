@@ -302,25 +302,84 @@
 
 
 
-<!-- Youtube video -->
+<!-- Demo Videos -->
 <section class="hero is-small">
   <div class="hero-body">
     <div class="container is-max-desktop">
-      <!-- Paper video. -->
-      <h2 class="title is-3">Video Walk-through</h2>
-      <div class="columns is-centered has-text-centered">
-        <!-- <div class="column is-four-fifths"> -->
-          
-          <div class="publication-video">
-            <!-- Youtube embed code here -->
-            <!-- Video hidden for anonymous review -->
-            <p style="text-align:center; color:gray;">Video available after review.</p>
-          </div>
+      <h2 class="title is-3">Demo Videos</h2>
+      <div class="columns is-multiline">
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Corridor</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_corridor.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Door Opening 1</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_door1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Door Opening 2</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_door2.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Glass Wall</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_glass.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Kitchen (Clean)</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_kitchen_clean.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Kitchen (Cluttered)</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_kitchen_dirty.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Pedestrians</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_people2.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Room (Cluttered 1)</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_room_dirty1.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-one-third">
+          <p class="has-text-centered has-text-weight-bold">Room (Cluttered 2)</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/web_room_dirty2.mp4" type="video/mp4">
+          </video>
+        </div>
       </div>
     </div>
   </div>
 </section>
-<!-- End youtube video -->
+<!-- End demo videos -->
+
+<!-- Full uncut video -->
+<section class="hero is-small is-light">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Full Uncut Video</h2>
+      <video controls preload="none" style="width:100%; border-radius: 8px;">
+        <source src="static/videos/web_uncut.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+<!-- End full video -->
 
 
 
@@ -396,7 +455,22 @@
       carouselContainer.appendChild(itemDiv);
     });
   });
-  </script> 
+
+  // Lazy load demo videos with Intersection Observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.play();
+      } else {
+        entry.target.pause();
+      }
+    });
+  }, { threshold: 0.25 });
+
+  document.querySelectorAll('.lazy-video').forEach(video => {
+    observer.observe(video);
+  });
+  </script>
 
 <!-- Statcounter tracking code -->
   
