@@ -136,7 +136,7 @@
         type="video/mp4">
       </video>
       <h2 class="subtitle has-text-centered">
-        EgoNav enables a humanoid robot to navigate diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning.
+        EgoNav enables a humanoid robot to perform zero-shot, goal-free traversal across diverse unseen environments by learning entirely from human walking data, with no robot data or finetuning.
       </h2>
     </div>
   </div>
@@ -163,7 +163,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            We present EgoNav, a system that enables a humanoid robot to traverse diverse, unseen environments by learning entirely from human walking data, with no robot data or finetuning. A diffusion model predicts distributions of plausible future trajectories conditioned on past trajectory, a 360&deg; visual memory fusing color, depth, and semantics, and video features from a frozen DINOv3 backbone that capture appearance cues invisible to depth sensors. A hybrid sampling scheme achieves real-time inference in 10 denoising steps, and a receding-horizon controller selects paths from the predicted distribution. We validate EgoNav through offline evaluations, where it outperforms baselines in collision avoidance and multi-modal coverage, and through zero-shot deployment on a Unitree G1 humanoid across unseen indoor and outdoor environments. Behaviors such as waiting for doors to open, navigating around pedestrians, and avoiding glass walls emerge naturally from the learned prior. We release the dataset and trained models.
+            We present EgoNav, a system that enables a humanoid robot to perform zero-shot, goal-free traversal across unseen environments by learning entirely from 5 hours of human walking data, with no robot data or finetuning. A diffusion model predicts distributions of plausible future trajectories conditioned on past trajectory, a 360&deg; visual memory fusing color, depth, and semantics, and video features from a frozen DINOv3 backbone that capture appearance cues invisible to depth sensors. A hybrid sampling scheme achieves real-time inference in 10 denoising steps, and a receding-horizon controller selects paths from the predicted distribution. We validate EgoNav through offline evaluations, real-world comparisons to VFH+ and MPPI, and failure-mode analysis during zero-shot deployment on a Unitree G1 humanoid across unseen indoor and outdoor environments. Behaviors such as waiting for doors to open, navigating around crowds, and avoiding glass walls emerge naturally from the learned prior. We will release the dataset and trained models.
           </p>
         </div>
       </div>
@@ -250,8 +250,37 @@
 </section>
 <!-- End demo videos -->
 
-<!-- Full uncut video -->
+<!-- Baseline Comparison -->
 <section class="hero is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <h2 class="title is-3">Baseline Comparison</h2>
+      <div class="content has-text-justified">
+        <p>
+          On the same Unitree G1 hardware, depth panorama, and speed limit, we compare EgoNav against two classic planners: VFH+ (hard-constraint geometric reactivity) and MPPI (sampling-based predictive control).
+        </p>
+      </div>
+      <div class="columns is-multiline">
+        <div class="column is-half">
+          <p class="has-text-centered has-text-weight-bold">VFH+</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/RAL2026_VFH_compressed.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="column is-half">
+          <p class="has-text-centered has-text-weight-bold">MPPI</p>
+          <video class="lazy-video" muted loop playsinline preload="none" style="width:100%; border-radius: 8px;">
+            <source src="static/videos/RAL2026_MPPI_compressed.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End baseline comparison -->
+
+<!-- Full uncut video -->
+<section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Uncut - 3.5min</h2>
@@ -264,13 +293,13 @@
 <!-- End full video -->
 
 <!-- Image carousel -->
-<section class="hero is-small is-light">
+<section class="hero is-small">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Dataset</h2>
       <div class="content has-text-justified">
         <p>
-          300 minutes (5 hours) of human walking data covering 25+ km across diverse campus environments. 44 sequences at 20 Hz, spanning varied weather, surfaces, and dynamic obstacles. Each timestep provides 6-DoF pose, RGBD images, semantic segmentation (8 classes), and precomputed visual memory panoramas. Dataset and tools will be released after review.
+          300 minutes (5 hours) of human walking data covering 25+ km across diverse campus environments. 44 sequences at 20 Hz, spanning varied weather, surfaces, and dynamic obstacles. Each timestep provides 6-DoF pose, RGBD images, semantic segmentation (8 classes), and precomputed visual memory panoramas. Dataset and pretrained models will be released after review.
         </p>
       </div>
       <div id="results-carousel" class="carousel results-carousel" style="max-width: 848px; margin: auto;">
@@ -285,7 +314,7 @@
 
 
 <!-- Image carousel -->
-<section class="hero is-small">
+<section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Method</h2>
@@ -307,7 +336,7 @@
 
 
 <!-- Image carousel -->
-<section class="hero is-small is-light">
+<section class="hero is-small">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Visual Memory</h2>
@@ -332,7 +361,7 @@
 
 
 <!-- Image carousel -->
-<section class="hero is-small">
+<section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Diffusion Model and Hybrid Generation</h2>
@@ -342,7 +371,7 @@
           <p class="has-text-centered" style="font-size: 14px; color: gray; margin-top: 8px;">Hybrid generation step search: Best-of-N, Collision, and Smoothness scores for different DDIM/DDPM step combinations. The optimal configuration is 5 DDIM + 5 DDPM steps.</p>
         </div>
         <p>
-          A 46M-parameter UNet predicts all 100 future steps (5 sec at 20 Hz) non-autoregressively, conditioned on visual memory, DINOv3 features, and past trajectory via classifier-free guidance. Our hybrid scheme&mdash;5 DDIM steps followed by 5 DDPM steps&mdash;achieves 100&times; acceleration over full DDPM while preserving multi-modal quality, generating 110 trajectories/sec at 1.7 Hz on a Jetson Thor.
+          A 46M-parameter non-autoregressive UNet predicts all 100 future steps (5 sec at 20&nbsp;Hz) simultaneously, conditioned on visual memory, DINOv3 features, and past trajectory via classifier-free guidance (each condition dropped 10% of the time during training). Our hybrid scheme&mdash;5 DDIM steps followed by 5 DDPM steps&mdash;is 100&times; faster than full DDPM while preserving multi-modal quality, generating 110 trajectories/sec at ~1.7&nbsp;Hz on a Jetson Thor.
         </p>
       </div>
   </div>
@@ -351,22 +380,22 @@
 <!-- End image carousel -->
 
 <!-- Real-World Deployment -->
-<section class="hero is-small is-light">
+<section class="hero is-small">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Real-World Deployment</h2>
       <div class="content has-text-justified">
         <p>
-          Zero-shot deployment on a Unitree G1 humanoid: 37.5 minutes, 1,137 meters, over 96% autonomous across static, corridor, glass, and dynamic scenes. Emergent behaviors include waiting at doors, navigating around pedestrians, and avoiding glass walls.
+          Zero-shot, goal-free traversal on a Unitree G1: <strong>1,137&nbsp;m / 37.5&nbsp;min, 96&ndash;99% autonomous</strong> across static, corridor, glass, and dynamic scenes. Higher effective speed than VFH+ and MPPI on the same hardware. Without DINOv3, glass-wall interventions nearly triple (0.77&nbsp;&rarr;&nbsp;2.2/min).
         </p>
 
-        <iframe src="table_baseline.html" frameborder="0" width="100%" height="300px" scrolling="no"></iframe>
+        <iframe src="table_baseline.html" frameborder="0" width="100%" height="520px" scrolling="no"></iframe>
       </div>
     </div>
   </div>
 </section>
 
-<section class="hero is-small">
+<section class="hero is-small is-light">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <h2 class="title is-3">Offline Evaluation</h2>
@@ -395,7 +424,7 @@
 
 
 <!--BibTex citation -->
-  <section class="section hero is-light" id="BibTeX">
+  <section class="section hero" id="BibTeX">
     <div class="container is-max-desktop">
       <h2 class="title">BibTeX</h2>
       <pre><code>@article{anonymous2026egonav,
